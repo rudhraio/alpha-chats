@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/assets/images/favicon.svg" type="image/x-icon">
+
+  <title>AlphaSpace | Anonymous Chats</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 h-full w-full">
+  <section id="welcome-section" class="hidden">
+    <div class="flex h-screen items-end sm:items-start">
+      <div class="my-36 flex w-full justify-center px-6">
+        <div class="sm:w-auto w-full">
+          <div>
+            <h2 class="text-2xl font-semibold sm:text-4xl">Welcome to AlphaSpace</h2>
+            <p class="text-md mt-2 sm:text-lg">Where you can chat with strangers</p>
+          </div>
+          <div class="mt-6 w-full sm:mt-12 sm:w-[30rem]">
+            <input type="text" id="username-input-box" class="w-full rounded-lg border p-3 text-xl"
+              placeholder="Username" />
+            <button id="join-chat" class="mt-4 w-full rounded-md bg-black p-3 font-bold text-white"
+              onclick="_joinChat()">
+              Join Chat
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="conversation-section" class="hidden h-screen">
+    <div class="flex flex-row h-full w-full lg:p-12 p-6 gap-x-6">
+      <div id="user-menu-container" class="lg:basis-[30%] lg:flex flex-col h-full hidden basis-full">
+        <div class="flex flex-col gap-y-3 p-5 rounded-xl bg-white">
+          <div class="flex justify-between items-center">
+            <div id="user-details" class="flex items-center gap-x-3 ">
+              <div id="user-avatar" class="relative">
+                <div class="flex justify-center items-center text-xl uppercase
+                  min-w-10 min-h-10 bg-cyan-700 text-white rounded-full">
+                  I
+                </div>
+                <div class="w-3 h-3 rounded-full bg-green-500 absolute bottom-0 right-0 cursor-pointer"></div>
+              </div>
+              <p id="username-component" class="text-lg font-medium">
+                #invalid-username
+              </p>
+            </div>
+            <div class="flex gap-x-6">
+              <div class="cursor-pointer">
+                <svg fill="#000000" width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M12,11A5,5,0,1,0,7,6,5.006,5.006,0,0,0,12,11Zm0-8A3,3,0,1,1,9,6,3,3,0,0,1,12,3ZM3,22a9,9,0,0,1,18,0,1,1,0,0,1-2,0A7,7,0,0,0,5,22a1,1,0,0,1-2,0Z" />
+                </svg>
+              </div>
+
+              <div class="cursor-pointer" id="logout" onclick="_logOut()">
+                <svg width="20" height="20" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" fill="red">
+                  <path d="M8 0a1 1 0 00-1 1v6a1 1 0 002 0V1a1 1 0 00-1-1z" />
+                  <path
+                    d="M12.665 2.781a1 1 0 10-1.333 1.491 5 5 0 11-6.665.001 1 1 0 00-1.333-1.49 7 7 0 109.331-.002z" />
+                </svg>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="my-2">
+          <!-- Search Box with Icon and Button -->
+          <div class="relative">
+            <!-- Search Input -->
+            <input type="text" placeholder="Search..." class="w-full py-2 pl-10 pr-3 border rounded-lg" />
+
+            <!-- Search Icon -->
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg width="20px" height="20px" viewBox="0 0 24 24" class="opacity-50" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M10 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12zm-8 6a8 8 0 1 1 14.32 4.906l5.387 5.387a1 1 0 0 1-1.414 1.414l-5.387-5.387A8 8 0 0 1 2 10z"
+                  fill="#0D0D0D" />
+              </svg>
+            </div>
+
+            <!-- Search Button -->
+            <!-- <button class="absolute inset-y-0 right-0 px-4 py-2 bg-gray-300 text-white rounded-r-lg ">
+              +
+            </button> -->
+          </div>
+        </div>
+        <div class="h-full rounded-xl bg-white overflow-y-scroll">
+
+          <div class="p-2">
+            <div id="global-chats" class="flex items-center bg-gray-100 gap-x-3 w-full 
+              rounded-2xl px-5 py-3 cursor-pointer user-chat-item" onclick="_onChatSelection('global-chats')">
+              <div class="w-10 h-10 bg-purple-700 rounded-full 
+                relative flex justify-center items-center text-xl text-white">
+                G
+                <div class="w-3 h-3 rounded-full bg-green-500 absolute bottom-0 right-0">
+                </div>
+              </div>
+              <div>
+                <p class="font-medium">
+                  #global-chats
+                </p>
+                <p class="text-sm">
+                  all member chats
+                </p>
+              </div>
+            </div>
+            <hr class="my-2">
+            <div id="user-chat-list" class="flex flex-col gap-y-3">
+              <!-- content loads dynamically -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="selected-item-container" class="basis-[70%] h-full flex flex-col gap-y-3">
+
+        <div id="selected-user-info">
+          <div class="flex items-center bg-white gap-x-3 w-full rounded-2xl px-5 py-3 cursor-pointer">
+
+            <div class="lg:hidden block" onclick="_unCheckSelection()">
+              <svg width="25px" height="25px" viewBox="-5 0 25 25" version="1.1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink">
+                <g id="icons" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                  <g id="ui-gambling-website-lined-icnos-casinoshunter" transform="translate(-1913.000000, -158.000000)"
+                    fill="#1C1C1F" fill-rule="nonzero">
+                    <g id="1" transform="translate(1350.000000, 120.000000)">
+                      <path d="M566.453517,38.569249 L577.302459,48.9938158 L577.39261,49.0748802 C577.75534,49.423454 577.968159,
+                        49.8870461 578,50.4382227 L577.998135,50.6228229 C577.968159,51.1129539 577.75534,51.576546 577.333675,
+                        51.9774469 L577.339095,51.9689832 L566.453517,62.430751 C565.663694,63.1897497 564.399001,63.1897497 563.609178,
+                        62.430751 C562.796941,61.650213 562.796941,60.3675924 563.609432,59.5868106 L573.012324,50.5572471 L563.609178,
+                        41.4129456 C562.796941,40.6324076 562.796941,39.349787 563.609178,38.569249 C564.399001,37.8102503 565.663694,
+                        37.8102503 566.453517,38.569249 Z" id="left"
+                        transform="translate(570.500000, 50.500000) scale(-1, 1) translate(-570.500000, -50.500000) ">
+                      </path>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+            </div>
+
+            <div id="selected-user-details" class="flex gap-x-4 items-center">
+              <div class="min-w-12 min-h-12 bg-purple-700 rounded-full 
+                relative flex justify-center items-center text-2xl text-white">
+                G
+                <div class="w-4 h-4 rounded-full bg-green-500 absolute bottom-0 right-0 cursor-pointer">
+                </div>
+              </div>
+              <div class="w-full">
+                <p class="flex justify-between font-medium items-center text-xl">
+                  #global-chats
+                </p>
+                <p class="text-sm mt-1">
+                  Online
+                </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="flex flex-col-reverse bg-white gap-x-3 w-full h-full rounded-2xl px-5 py-3 overflow-y-auto">
+          <div id="selected-user-conversation" class="flex justify-end flex-col gap-y-6 ">
+            <!-- content filled dynamically -->
+          </div>
+        </div>
+
+        <div class="flex items-center bg-white gap-x-3 w-full rounded-2xl px-5 py-3">
+          <div class="w-full">
+            <div class="flex flex-row gap-x-3 items-center">
+              <textarea id="message-box" type="text" class="font-light px-3 py-2 border w-full rounded-lg" rows="1"
+                placeholder="Message"></textarea>
+              <button class="py-2 px-4 bg-black text-white rounded-lg">Send</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+
+
+    </div>
+  </section>
+
+
+
+
+  <script src="assets/js/main.js"></script>
+</body>
+
+</html>
